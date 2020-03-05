@@ -1,0 +1,64 @@
+DDD
+1/ Ubiquitous Language:
+ - Part of DDD.
+ - Aims at building a common and business oriented language.
+ - Is a vocabulary of terms shared by all parties involved in the project.
+ - This language should be based on the Domain Model used in the software.
+
+2/ Bounded context:
+ - Central pattern in DDD.
+ - Dealing with large models and teams.
+ - Deal with large models by dividing them into different Bounded Contexts and being explicit about their interrelationships.
+
+3/ DDD Layered Architecture
+ a/ Presentation Layer:
+  - Responsible for providing some user interface to accomplish any tasks.
+  - Whatever command is issued, the application layer is routed through the various remaining layers of the system.
+  b/ Domain Layer:
+   - Responsible for representing concepts of the business.
+   - Contains domain entities that capture data plus behavior (methods with logic)
+   - Ignores data persistence details. (Based on Persistence Ignorance and the Infrastructure Ignorance)
+   - Domain model entity classes should be POCOs.
+   (Domain entity model, POCO entity classes, DDD Patterns: Aggregate root, value object, repository interfaces)
+  c/ Application Layer
+   - Defines the jobs the software is supposed to do.
+   - CQRS
+  d/ Infrastructure Layer
+   - Defines how in - memory data is persisted in databases or another persistent store. Ex: using EFCore code to implement the Repository pattern classes that use a DbContext to persist data in a relational database.
+
+Domain Event
+  - Use domain events to explicitly implement side effects of changes within domain.
+1/ What?
+  - An event is something that has happened in the past.
+   => A domain event is something that happened in the domain that you want other parts of the same domain to be aware of. In other words, 
+      it is used to notify other parts of the same domain that something interesting happened and these other parts potentially can react to.
+  - Domain Event --> Domain Event Handler.
+2/ Implement domain events
+  - Is simply a class (like DTO), with all the information/data related to what just happened in the domain.
+  - Class name should be represented as a past-tense verb.
+  - Must be an immutable class (bất biến) ==> Properties are read-only (Not allow to change the value of the properties)
+3/ Raise domain events
+  - First, add the events happening in entities into a collection or list of events per entity.
+    --> This step just adds the events to list / collection. No event is dispatched (phái đi, gửi đi) yet and no event handler is invoked yet.
+  - Building the Event Handlers
+    --> Whenever an event is issued by our system we can use an Event Handler to do something with that event.
+       ==> For ex, we need our Event Handlers to update our READ data store.
+  (*) NOTE: Write ---> Event ---> Event Handler ---> Event Handler saves the new data to READ db
+            With the Event Handlers, every time an Event is kicked off, it will be consumed by the Event Handlers
+             and the dbms (Redis, SQL Server, MariaDb, ...) that contains read model will be updated.
+
+Fluent Validation
+ - Use fluent validation when you want to treat validation logic as separate from business logic
+
+Microservices
+- Each microservice is supposed to do one thing and do it well.
+- A microservice is a service built around a specific business capability,
+   which can be independently deployed. Its called Bounded Context.
+=> To build a large enterprise application, we have to identify the sub-domains of our main business domain,
+   and build each sub-domain as a microservice. Ex: User management, Catalog, Invoicing,....
+1/ Definitions
+- Microservices are small services that work together.
+- Each microservice lives independently, but they all rely on each other.
+- Microservices solve the systems that are too big. ==> Smaller teams, easier to manage, quicker to develop and test, more agile.
+2/ Microservices elements
+3/ Are microservices right for your organization?
