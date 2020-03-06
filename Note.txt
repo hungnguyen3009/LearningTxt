@@ -60,5 +60,72 @@ Microservices
 - Microservices are small services that work together.
 - Each microservice lives independently, but they all rely on each other.
 - Microservices solve the systems that are too big. ==> Smaller teams, easier to manage, quicker to develop and test, more agile.
-2/ Microservices elements
+2/ Microservices elements (An application includes FrontEnd - BackEnd - Database --> Draw the image from slide)
+ (a) Building a Monolith (Draw the image from slide)
+   - Entire backend will be deployed as a single monolithic application with its own single database.
+   - Single database.
+   - User interface.
+   - Single monolith (Backend).
+   (a.1) Pros
+       - Simple to develop (but limits with a few frameworks and databases)
+       - Simple to build
+       - Simple to deploy
+   (a.2) Cons
+       - Application is too large and complex to fully understand and made changes fast and correctly.
+       - Size of the application can slow down the start up time.
+       - Huge database.
+       - Must redeploy the entire application on each update.
+ (b) Building Microservices (Draw the image from slide)
+       - Split the Domain into Sub-Domains.
+       - Each Sub-Domains corresponds to a different part of the business (Ex: User, Order, Product, ...)
+       - Sub-Domains should be independent of each other. We can use duplicate the entitites that depend on each other technique.
+         ==> Another ex, in User Domain, the user can have a profile with social media
+	     and in the Order Domain, a user can have information about payment such as credit card.
+             ==> Each Sub-Domain being responsible for its own processing and data, it should have its own database.
+       - Sub-Domains should not share databases.
+ (c) Pros and Cons
+       (c.1) Pros
+	   - Team / Sub-Domain.
+           - We can right-sized teams (small sub-domain, big sub-domain).
+           - Each team is totally independent. (Even if the teams are all independent,
+              those microservices end up communicating with each other)
+       (c.2) Cons
+  (d) Codebase
+      - Each sub-domain has its own repository.
+      - Each sub-domain must be versioned.
+  (e) Data Store
+      - In the monolith approach, the entire data of the application is stored in a single database.
+      - In the microservice approach, each service needs its own independent database. Changes to one service's database does not impact any other services.
+  (f) Services
+      - Microservices will end up communicating with each other. That time, they need to expose (thể hiện ra) and consume necessary APIs,
+        use a communication protocol. There are two popular communication styles:
+	(f.1) Remote Procedure Invocation (RPC - Remote Procedure Call)
+	     - Works on the request/reply principle. A service requests something to another service and this one replies back.
+               --> Order microservice requests to Product microservice to get the price of a sprcific product.
+               --> This call can be Synchronous or Asynchronous.
+	(f.2) Messaging
+             - Microservices exchange messages or events via a broker or channel.
+             - When a microservice wants to interact with the other, it publishes a message to the broker. The other microservices subscribe
+               to that broker if interested in such messages and receive messages at later stage. These microservices can then proceed to
+               update their own state.
+             - Improve availability since the message broker buffers messages until the consumer is able to process them.
+             - Ex, order microservice exposes two APIs, one to create a new purchase order, and a second one to retrieve an existing one.
+               For the other services to know what's exposed and how to invoke it, the order microservice exposes a contract.
+  (g) Distributed Services //////////////////////
 3/ Are microservices right for your organization?
+
+Domain and Sub-Domains (Find diagram for example)
+1/ Domain
+   - Refers to the space of the problems for which we are acting.
+2/ Sub-Domains
+   - Is a subpart of the Domain.
+   - Every Domain can always be divided into Subdomains, by doing this we divide the entire complexity
+     of the Company's Domain into smaller parts.
+   - Each Sub-Domain corresponds to a different part of the business.
+3/ Domain Model
+   - It's the model of the objects required for your business purposes.
+   --> Ex: The entire set of classes, as well as the relationships between them, would constitute Domain Model.
+
+(*) Research more about Event - Sourcing pattern.
+(*) Research about Kafka.
+(*) Research about RPC and Messaging.
