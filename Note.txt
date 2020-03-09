@@ -63,9 +63,6 @@ Microservices
 2/ Microservices elements (An application includes FrontEnd - BackEnd - Database --> Draw the image from slide)
  (a) Building a Monolith (Draw the image from slide)
    - Entire backend will be deployed as a single monolithic application with its own single database.
-   - Single database.
-   - User interface.
-   - Single monolith (Backend).
    (a.1) Pros
        - Simple to develop (but limits with a few frameworks and databases)
        - Simple to build
@@ -89,7 +86,7 @@ Microservices
            - We can right-sized teams (small sub-domain, big sub-domain).
            - Each team is totally independent. (Even if the teams are all independent,
               those microservices end up communicating with each other)
-       (c.2) Cons
+       (c.2) Cons //////////////
   (d) Codebase
       - Each sub-domain has its own repository.
       - Each sub-domain must be versioned.
@@ -101,9 +98,9 @@ Microservices
         use a communication protocol. There are two popular communication styles:
 	(f.1) Remote Procedure Invocation (RPC - Remote Procedure Call)
 	     - Works on the request/reply principle. A service requests something to another service and this one replies back.
-               --> Order microservice requests to Product microservice to get the price of a sprcific product.
+               --> Order microservice requests to Product microservice to get the price of a specific product.
                --> This call can be Synchronous or Asynchronous.
-	(f.2) Messaging
+	(f.2) Messaging (via an Event Bus)
              - Microservices exchange messages or events via a broker or channel.
              - When a microservice wants to interact with the other, it publishes a message to the broker. The other microservices subscribe
                to that broker if interested in such messages and receive messages at later stage. These microservices can then proceed to
@@ -111,8 +108,53 @@ Microservices
              - Improve availability since the message broker buffers messages until the consumer is able to process them.
              - Ex, order microservice exposes two APIs, one to create a new purchase order, and a second one to retrieve an existing one.
                For the other services to know what's exposed and how to invoke it, the order microservice exposes a contract.
-  (g) Distributed Services //////////////////////
-3/ Are microservices right for your organization?
+  (g) Security
+      - Authentication and Authorization are two terms used when controlling access to a service.
+      - Authentication is the process of asserting (khẳng định) that somebody really is who he claims to be. Ex, asking for user and password.
+      - Authorization refers to rules that determine who is allowed to do what. Ex, only admin can remove existing users from our user microservice.
+      - Benefit of having a gateway as a single entry point for client requests. It authenticates requests and forwards them to other services,
+        which might in turn invoke other services.
+      - Research about access token.
+  (h) Deployment
+      - One microservice per host. This way, each microservice instance is isolated from other.s
+      - Package each microservice as a Container Image, and deploy it as a container. (Draw the image) --> it's the container's role to 
+        encapsulate the details of the technology used to build a service. ==> Can use Docker or Rocket to do this.
+      - Containers are a way of packaging our microservices.
+  (*) Logging, Health checks, Authentication (Microservices must have these)
+  (*) RECAP (Draw diagram in Revisiting the Microservices Elements)
+
+API Gateway (https://viblo.asia/p/api-gateway-la-gi-tai-sao-mot-he-thong-microservices-lai-can-api-gateway-Do754pDX5M6)
+1/ Intro
+   - Một hệ thống microservices trung bình sẽ có một vài cho tới hàng trăm
+     services khác nhau, nếu client giao tiếp trực tiếp với các services này thì sơ đồ giao tiếp
+     giữa client và hệ thống sẽ không gọn gàng.
+2/ Definition
+   - Có thể coi API Gateway là một cổng trung gian giữa client và hệ thống microservices đằng sau.
+   - Là cổng vào duy nhất tới hệ thống microservices.
+   - API Gateway sẽ nhận các requests từ phía client, chỉnh sửa, xác thực và điều hướng chúng đến các API cụ thể trên các
+     services phía sau.
+3/ Pros and Cons
+   (3.1) Pros
+         CHE GIẤU ĐƯỢC CẤU TRÚC CỦA HỆ THỐNG MICROSERVICES VỚI BÊN NGOÀI
+          - Clients sẽ tương tác với hệ thống thông qua API Gateway chứ ko gọi
+            trực tiếp tới một services cụ thể. Các enpoints của các services sẽ chỉ được
+            gọi nội bộ, tức là gọi giữa các services với nhau hoặc được gọi từ API Gateway.
+         DỄ DÀNG THEO DÕI VÀ QUẢN LÝ TRAFFIC
+         ...
+   (3.2) Cons
+         TĂNG THỜI GIAN RESPONSE
+          - Vì phải đi qua server trung gian cho nên việc response sẽ bị trễ hơn so với việc gọi
+            trực tiếp tới hệ thống.
+         CÓ THỂ GÂY NGHẼN CỔ CHAI (BOTTLE-NECK)
+          - Nếu không được scale hay config hợp lý thì gateway sẽ có thể bị quá tải và làm chậm hệ thống.
+         ...
+
+API Endpoints
+- Is one end of a communication channel.
+- When an API interacts with another system, the touchpoints of this communication
+  are considered endpoints.
+- An endpoint can include a URL of a server or service.
+- Each endpoint is the location from which APIs can access the resources they need to carry out their function.
 
 Domain and Sub-Domains (Find diagram for example)
 1/ Domain
@@ -125,7 +167,30 @@ Domain and Sub-Domains (Find diagram for example)
 3/ Domain Model
    - It's the model of the objects required for your business purposes.
    --> Ex: The entire set of classes, as well as the relationships between them, would constitute Domain Model.
+4/ Domain Logic patterns
+   - Transaction script 
+      => A single procedure handles each request from the presentation layer.
+   - Domain model
+   - Table module
+   - Serverless approach
+(*) Apply the domain logic and data access patterns that make most sense for each individual microservice.
+
+Data Access Patterns in Microservice
+1/ Relational Databases
+2/ Document Databases
+3/ CQRS
+4/ Event Sourcing
+
+Backend For Frontend (BFF)
+- This pattern can be used to create backends for client-facing mobile or web apps.
+
+Backend for Frontend vs API Gateway (https://www.devdelly.com/api-gateway-vs-bff/)
+- While an API Gateway is a single point of entry into the system for all clients,
+  a BFF is only responsible for a single type of client. 
+==> Ex, your system has two clients: a Single Page Application (SPA) and a Mobile client.
+    In this case, each client would get its own API Gateway, which would therefore be a BFF.
 
 (*) Research more about Event - Sourcing pattern.
 (*) Research about Kafka.
 (*) Research about RPC and Messaging.
+(*) Research about Docker
