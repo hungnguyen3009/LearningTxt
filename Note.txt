@@ -170,6 +170,17 @@ Domain and Sub-Domains (Find diagram for example)
 4/ Domain Logic patterns
    - Transaction script 
       => A single procedure handles each request from the presentation layer.
+         In that procedure, you simply work through all the things that need to happen.
+         Ex: Add New Item to the Basket
+             1/ Fetch contents of user basket from data store (Data access)
+             2/ Implement basket validation rules (Business Logic) (e.g. Basket cannot contain > 100 of the same item) (Domain Logic)
+             3/ Persist any changes that we've made to the basket back into data store (Data access)
+             4/ Publish BasketUpdated message to Event Bus and that will trigger all kinds of additional behavior.
+         ==> Domain Logic and Data Access are in the same procedure. This approach is only suitable for simple microservices.
+         ==> Pros: Simple. Easy to see the big picture of everything that happens. 
+         ==> Cons: 1/ Amount of Domain Logic increases, the transaction script methods can get very long and complex.
+                   2/ Domain Logic and Data Access are mixed together can make the methods very difficult to unit test.
+                   3/ Duplication of Domain Logic
    - Domain model
    - Table module
    - Serverless approach
@@ -189,6 +200,9 @@ Backend for Frontend vs API Gateway (https://www.devdelly.com/api-gateway-vs-bff
   a BFF is only responsible for a single type of client. 
 ==> Ex, your system has two clients: a Single Page Application (SPA) and a Mobile client.
     In this case, each client would get its own API Gateway, which would therefore be a BFF.
+
+ASP.NET Core In Action
+- A dynamic web page displays different data depending on the current logged-in user.
 
 (*) Research more about Event - Sourcing pattern.
 (*) Research about Kafka.
